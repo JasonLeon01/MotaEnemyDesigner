@@ -203,27 +203,33 @@ namespace EnemyDesigner
         }
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].hp = int.Parse(textBox2.Text);
+            if (textBox2.Text == "") enemyList[listBox1.SelectedIndex].hp = 0;
+            else enemyList[listBox1.SelectedIndex].hp = int.Parse(textBox2.Text);
         }
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].atk = int.Parse(textBox3.Text);
+            if (textBox3.Text == "") enemyList[listBox1.SelectedIndex].atk = 0;
+            else enemyList[listBox1.SelectedIndex].atk = int.Parse(textBox3.Text);
         }
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].def = int.Parse(textBox5.Text);
+            if (textBox5.Text == "") enemyList[listBox1.SelectedIndex].def = 0;
+            else enemyList[listBox1.SelectedIndex].def = int.Parse(textBox5.Text);
         }
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].conatk = int.Parse(textBox4.Text);
+            if (textBox4.Text == "") enemyList[listBox1.SelectedIndex].conatk = 0;
+            else enemyList[listBox1.SelectedIndex].conatk = int.Parse(textBox4.Text);
         }
         private void textBox7_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].exp = int.Parse(textBox7.Text);
+            if (textBox7.Text == "") enemyList[listBox1.SelectedIndex].exp = 0;
+            else enemyList[listBox1.SelectedIndex].exp = int.Parse(textBox7.Text);
         }
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-            enemyList[listBox1.SelectedIndex].gold = int.Parse(textBox6.Text);
+            if (textBox6.Text == "") enemyList[listBox1.SelectedIndex].gold = 0;
+            else enemyList[listBox1.SelectedIndex].gold = int.Parse(textBox6.Text);
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -274,6 +280,7 @@ namespace EnemyDesigner
         private void button3_Click(object sender, EventArgs e)
         {
             string eleinput = Interaction.InputBox(null, "输入内容", null, -1, -1);
+            if (eleinput == "") return;
             elementList.Add(new Element(eleinput, ""));
             refreshList2();
         }
@@ -332,7 +339,6 @@ namespace EnemyDesigner
                 System.IO.File.Delete(file + @"element_" + (idx++).ToString() + ".dat");
             MessageBox.Show("保存成功！");
             refreshList1();
-            refreshList2();
             refreshInfo();
         }
     }

@@ -32,3 +32,5 @@ D:\GitHub Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\Enem
 D:\GitHub Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\ref\EnemyDesigner.dll
 D:\GitHub Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\Interop.VBIDE.dll
 D:\GitHub Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\EnemyDesigner.csproj.ResolveComReference.cache
+E:\Github Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\Interop.VBIDE.dll
+E:\Github Projects\MotaEnemyDesigner\EnemyDesigner\obj\Debug\net6.0-windows\EnemyDesigner.csproj.ResolveComReference.cache
