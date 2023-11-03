@@ -137,9 +137,11 @@ namespace EnemyDesigner
             }
             if (listBox1.SelectedIndex != -1 && enemyList[listBox1.SelectedIndex].file != "")
             {
-                pictureBox1.Image = Image.FromFile(Application.StartupPath + @"..\graphics\character\" + enemyList[listBox1.SelectedIndex].file); buffer = new Bitmap(32, 32);
+                pictureBox1.Image = Image.FromFile(Application.StartupPath + @"..\graphics\character\" + enemyList[listBox1.SelectedIndex].file);
+                int picsiz = pictureBox1.Width / 4;
+                buffer = new Bitmap(picsiz, picsiz);
                 Graphics g = Graphics.FromImage(buffer);
-                g.DrawImage(pictureBox1.Image, new Rectangle(0, 0, 32, 32), new Rectangle(32 * (gameTime % 4), 32 * enemyList[listBox1.SelectedIndex].pos, 32, 32), GraphicsUnit.Pixel);
+                g.DrawImage(pictureBox1.Image, new Rectangle(0, 0, picsiz, picsiz), new Rectangle(picsiz * (gameTime % 4), picsiz * enemyList[listBox1.SelectedIndex].pos, picsiz, picsiz), GraphicsUnit.Pixel);
                 pictureBox2.Image = buffer;
                 g.Dispose();
             }
@@ -244,7 +246,7 @@ namespace EnemyDesigner
             //创建对象
             OpenFileDialog ofg = new OpenFileDialog();
             //设置默认打开路径
-            ofg.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Application.StartupPath)) + @"\graphics\character";
+            ofg.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Application.ExecutablePath)) + @"\graphics\character";
             //设置打开标题、后缀
             ofg.Title = "请选择导入png文件";
             ofg.Filter = "png文件|*.png";
