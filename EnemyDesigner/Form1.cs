@@ -138,10 +138,9 @@ namespace EnemyDesigner
             if (listBox1.SelectedIndex != -1 && enemyList[listBox1.SelectedIndex].file != "")
             {
                 pictureBox1.Image = Image.FromFile(Application.StartupPath + @"..\graphics\character\" + enemyList[listBox1.SelectedIndex].file);
-                int picsiz = pictureBox1.Width / 4;
-                buffer = new Bitmap(picsiz, picsiz);
+                buffer = new Bitmap(32, 32);
                 Graphics g = Graphics.FromImage(buffer);
-                g.DrawImage(pictureBox1.Image, new Rectangle(0, 0, picsiz, picsiz), new Rectangle(picsiz * (gameTime % 4), picsiz * enemyList[listBox1.SelectedIndex].pos, picsiz, picsiz), GraphicsUnit.Pixel);
+                g.DrawImage(pictureBox1.Image, new Rectangle(0, 0, 32, 32), new Rectangle(32 * (gameTime % 4), 32 * enemyList[listBox1.SelectedIndex].pos, 32, 32), GraphicsUnit.Pixel);
                 pictureBox2.Image = buffer;
                 g.Dispose();
             }
