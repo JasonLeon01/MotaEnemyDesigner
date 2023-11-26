@@ -1,0 +1,17 @@
+{
+  "name": "八嘎呀路",
+  "file": "Monster01-11.png",
+  "pos": 0,
+  "hp": 0,
+  "atk": 0,
+  "def": 0,
+  "conatk": 0,
+  "exp": 0,
+  "gold": 0,
+  "animationID": 0,
+  "element": [
+    1,
+    2,
+    3
+  ]
+}

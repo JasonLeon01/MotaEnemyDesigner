@@ -2,6 +2,11 @@ using System;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using Microsoft.VisualBasic;
+using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Text.Unicode;
+using System.Text.Json;
 
 namespace EnemyDesigner
 {
@@ -35,15 +40,13 @@ namespace EnemyDesigner
         {
             int idx = 0;
             string path = Application.StartupPath + @"..\data\enemy\";
-            while (File.Exists(path + @"enemy_" + idx.ToString() + ".dat"))
+            while (File.Exists(path + @"enemy_" + idx.ToString() + ".json"))
             {
-                string file = @"enemy_" + idx.ToString() + ".dat";
-                string datatext = System.IO.File.ReadAllText(path + file);
-                string[] data = datatext.Split(Environment.NewLine.ToCharArray());
-                data = data.Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                var datamap = data.Select(line => line.Split(':')).Where(parts => parts.Length == 2).ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
-                listBox1.Items.Add(idx.ToString().PadLeft(3, '0') + "£º" + datamap["name"]);
-                enemyList.Add(new Enemy(datamap["name"] == "none" ? "" : datamap["name"] , datamap["file"] == "none" ? "" : datamap["file"], int.Parse(datamap["pos"]), int.Parse(datamap["hp"]), int.Parse(datamap["atk"]), int.Parse(datamap["def"]), int.Parse(datamap["conatk"]), int.Parse(datamap["exp"]), int.Parse(datamap["gold"]), datamap["element"].Split(',').Select(s => int.Parse(s)).Where(s => s != 0).ToList(), int.Parse(datamap["animationID"])));
+                string file = @"enemy_" + idx.ToString() + ".json";
+                string jsonstr = System.IO.File.ReadAllText(path + file);
+                Enemy tempen = JsonSerializer.Deserialize<Enemy>(jsonstr);
+                listBox1.Items.Add(idx.ToString().PadLeft(3, '0') + "£º" + tempen.name);
+                enemyList.Add(tempen);
                 ++idx;
             }
             if (listBox1.Items.Count == 0)
@@ -52,22 +55,15 @@ namespace EnemyDesigner
                 Application.Exit();
                 return;
             }
-            idx = 0;
+            idx = 1;
             path = Application.StartupPath + @"..\data\element\";
-            while (File.Exists(path + @"element_" + idx.ToString() + ".dat"))
+            while (File.Exists(path + @"element_" + idx.ToString() + ".json"))
             {
-                if (idx == 0)
-                {
-                    ++idx;
-                    continue;
-                }
-                string file = @"element_" + idx.ToString() + ".dat";
-                string datatext = System.IO.File.ReadAllText(path + file);
-                string[] data = datatext.Split(Environment.NewLine.ToCharArray());
-                data = data.Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                var datamap = data.Select(line => line.Split(':')).Where(parts => parts.Length == 2).ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
-                checkedListBox1.Items.Add(datamap["name"]);
-                elementList.Add(new Element(datamap["name"], datamap["description"] == "none" ? "" : datamap["description"]));
+                string file = @"element_" + idx.ToString() + ".json";
+                string jsonstr = System.IO.File.ReadAllText(path + file);
+                Element temele = JsonSerializer.Deserialize<Element>(jsonstr);
+                checkedListBox1.Items.Add(temele.name);
+                elementList.Add(temele);
                 ++idx;
             }
             if (checkedListBox1.Items.Count == 0)
@@ -78,15 +74,13 @@ namespace EnemyDesigner
             }
             idx = 0;
             path = Application.StartupPath + @"..\data\animation\";
-            while (File.Exists(path + @"animation_" + idx.ToString() + ".dat"))
+            while (File.Exists(path + @"animation_" + idx.ToString() + ".json"))
             {
-                string file = @"animation_" + idx.ToString() + ".dat";
-                string datatext = System.IO.File.ReadAllText(path + file);
-                string[] data = datatext.Split(Environment.NewLine.ToCharArray());
-                data = data.Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                var datamap = data.Select(line => line.Split(':')).Where(parts => parts.Length == 2).ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
-                animationNameList.Add(datamap["name"]);
-                comboBox1.Items.Add(idx.ToString().PadLeft(3, '0') + "£º" + datamap["name"]);
+                string file = @"animation_" + idx.ToString() + ".json";
+                string jsonstr = System.IO.File.ReadAllText(path + file);
+                Dictionary <string, object> data = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonstr);
+                animationNameList.Add(data["name"].ToString());
+                comboBox1.Items.Add(idx.ToString().PadLeft(3, '0') + "£º" + data["name"].ToString());
                 ++idx;
             }
             if (animationNameList.Count == 0)
@@ -309,35 +303,34 @@ namespace EnemyDesigner
             string file = Application.StartupPath + @"..\data\enemy\";
             foreach (Enemy en in enemyList)
             {
-                string data = "[enemy]\n";
-                data += "name:" + (en.name == "" ? "none" : en.name) + "\n";
-                data += "file:" + (en.file == "" ? "none" : en.file) + "\n";
-                data += "element:" + (en.element.Count == 0 ? "0" : (string.Join(",", en.element))) + "\n";
-                data += "pos:" + en.pos.ToString() + "\n";
-                data += "hp:" + en.hp.ToString() + "\n";
-                data += "atk:" + en.atk.ToString() + "\n";
-                data += "def:" + en.def.ToString() + "\n";
-                data += "conatk:" + en.conatk.ToString() + "\n";
-                data += "exp:" + en.exp.ToString() + "\n";
-                data += "gold:" + en.gold.ToString() + "\n";
-                data += "animationID:" + en.animationID.ToString() + "\n";
-                System.IO.File.WriteAllText(file + @"enemy_" + idx.ToString() + ".dat", data);
+                var options = new JsonSerializerOptions
+                {
+                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                    DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+                    WriteIndented = true
+                };
+                string jsonstr = JsonSerializer.Serialize(en, options);
+                System.IO.File.WriteAllText(file + @"enemy_" + idx.ToString() + ".json", jsonstr);
                 idx++;
             }
-            while (File.Exists(file + @"enemy_" + idx.ToString() + ".dat"))
-                System.IO.File.Delete(file + @"enemy_" + (idx++).ToString() + ".dat");
+            while (File.Exists(file + @"enemy_" + idx.ToString() + ".json"))
+                System.IO.File.Delete(file + @"enemy_" + (idx++).ToString() + ".json");
             idx = 1;
             file = Application.StartupPath + @"..\data\element\";
             foreach (Element ele in elementList)
             {
-                string data = "[element]\n";
-                data += "name:" + ele.name + "\n";
-                data += "description:" + ele.description + "\n";
-                System.IO.File.WriteAllText(file + @"element_" + idx.ToString() + ".dat", data);
+                var options = new JsonSerializerOptions
+                {
+                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                    DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+                    WriteIndented = true
+                };
+                string jsonstr = JsonSerializer.Serialize(ele, options);
+                System.IO.File.WriteAllText(file + @"element_" + idx.ToString() + ".json", jsonstr);
                 idx++;
             }
-            while (File.Exists(file + @"element_" + idx.ToString() + ".dat"))
-                System.IO.File.Delete(file + @"element_" + (idx++).ToString() + ".dat");
+            while (File.Exists(file + @"element_" + idx.ToString() + ".json"))
+                System.IO.File.Delete(file + @"element_" + (idx++).ToString() + ".json");
             MessageBox.Show("±£´æ³É¹¦£¡");
             refreshList1();
             refreshInfo();
@@ -346,9 +339,17 @@ namespace EnemyDesigner
 }
 class Enemy
 {
-    public string name, file;
-    public int pos, hp, atk, def, conatk, exp, gold, animationID;
-    public List<int> element;
+    public string name { get; set; }
+    public string file { get; set; }
+    public int pos { get; set; }
+    public int hp { get; set; }
+    public int atk { get; set; }
+    public int def { get; set; }
+    public int conatk { get; set; }
+    public int exp { get; set; }
+    public int gold { get; set; }
+    public int animationID { get; set; }
+    public List<int> element { get; set; }
     public Enemy(string name, string file, int pos, int hp, int atk, int def, int conatk, int exp, int gold, List<int> element, int animationID)
     {
         this.name = name;
@@ -366,7 +367,8 @@ class Enemy
 }
 class Element
 {
-    public string name, description;
+    public string name { get; set; }
+    public string description { get; set; }
     public Element(string name, string description)
     {
         this.name = name;

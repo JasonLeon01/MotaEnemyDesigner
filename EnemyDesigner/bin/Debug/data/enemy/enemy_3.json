@@ -1,0 +1,18 @@
+{
+  "name": "153",
+  "file": "101-CF_Lava01.png",
+  "pos": 0,
+  "hp": 0,
+  "atk": 0,
+  "def": 0,
+  "conatk": 0,
+  "exp": 0,
+  "gold": 0,
+  "animationID": 0,
+  "element": [
+    3,
+    4,
+    5,
+    6
+  ]
+}
