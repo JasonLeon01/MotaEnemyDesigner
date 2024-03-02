@@ -131,7 +131,7 @@ namespace EnemyDesigner
             }
             if (listBox1.SelectedIndex != -1 && enemyList[listBox1.SelectedIndex].file != "")
             {
-                pictureBox1.Image = Image.FromFile(Application.StartupPath + @"..\graphics\character\" + enemyList[listBox1.SelectedIndex].file);
+                pictureBox1.Image = Image.FromFile(Application.StartupPath + @"..\assets\character\" + enemyList[listBox1.SelectedIndex].file);
                 buffer = new Bitmap(32, 32);
                 Graphics g = Graphics.FromImage(buffer);
                 g.DrawImage(pictureBox1.Image, new Rectangle(0, 0, 32, 32), new Rectangle(32 * (gameTime % 4), 32 * enemyList[listBox1.SelectedIndex].pos, 32, 32), GraphicsUnit.Pixel);
@@ -239,7 +239,7 @@ namespace EnemyDesigner
             //创建对象
             OpenFileDialog ofg = new OpenFileDialog();
             //设置默认打开路径
-            ofg.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Application.ExecutablePath)) + @"\graphics\character";
+            ofg.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Application.ExecutablePath)) + @"\assets\character";
             //设置打开标题、后缀
             ofg.Title = "请选择导入png文件";
             ofg.Filter = "png文件|*.png";
@@ -307,7 +307,7 @@ namespace EnemyDesigner
                 {
                     Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
                     DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                    WriteIndented = true
+                    WriteIndented = false
                 };
                 string jsonstr = JsonSerializer.Serialize(en, options);
                 System.IO.File.WriteAllText(file + @"enemy_" + idx.ToString() + ".json", jsonstr);
@@ -323,7 +323,7 @@ namespace EnemyDesigner
                 {
                     Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
                     DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                    WriteIndented = true
+                    WriteIndented = false
                 };
                 string jsonstr = JsonSerializer.Serialize(ele, options);
                 System.IO.File.WriteAllText(file + @"element_" + idx.ToString() + ".json", jsonstr);
